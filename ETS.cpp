@@ -106,56 +106,165 @@ int main() {
     cin >> choice;
     cin.ignore();
 
-        switch (choice) {
-            case 0:
-            cout << "\n👋 Exiting the editor. See you again!\n";
-            return 0;
-            
-            case 1: {
-                string input, line;
-                cout << "Enter text to insert (type '::end' to finish):" << endl;
-                while (true) {
-                    getline(cin, line);
-                    if (line == "::end") break;
-                    input += line + '\n';
-                }
-            
-                int position = 0;
-                TextNode* temp = head;
-                while (temp) {
-                    position++;
-                    temp = temp->next;
-                }
-            
-                for (char ch : input) {
-                    TextNode* newNode = new TextNode(ch);
-            
-                    if (boldMode) newNode->bold = true;
-                    if (italicMode) newNode->italic = true;
-                    if (underlineMode) newNode->underline = true;
-            
-                    if (!head) {
-                        head = newNode;
-                    }
-                    else {
-                        TextNode* curr = head;
-                        while (curr->next) curr = curr->next;
-                        curr->next = newNode;
-                    }
-            
-                    Action insertAction;
-                    insertAction.type = "insert";
-                    insertAction.position = position++;
-                    insertAction.content = ch;
-                    undoStack.push(insertAction);
-                }
-            
-                while (!redoStack.isEmpty()) redoStack.pop();
-            
-                cout << "Inserted: \n" << input << endl;
-                break;
+    switch (choice) {
+        case 0:
+        cout << "\n👋 Exiting the editor. See you again!\n";
+        return 0;
+        
+        case 1: {
+            cout << "Insert Choice:\n";
+            cout << "1. Insert at end\n";
+            cout << "2. Insert at beginning\n";
+            cout << "3. Insert at specific position\n";
+            int insertChoice;
+            cin >> insertChoice;
+            cin.ignore();
+
+            string input, line;
+            cout << "Enter text to insert (type '::end' to finish):" << endl;
+            while (true) {
+                getline(cin, line);
+                if (line == "::end") break;
+                input += line + '\n';
             }
+            switch (insertChoice) {
+                case 1: { // Insert at end
+                    int position = 0;
+                    TextNode* temp = head;
+                    while (temp) {
+                        position++;
+                        temp = temp->next;
+                    }
+        
+                    for (char ch : input) {
+                        TextNode* newNode = new TextNode(ch);
+        
+                        if (boldMode) newNode->bold = true;
+                        if (italicMode) newNode->italic = true;
+                        if (underlineMode) newNode->underline = true;
+        
+                        if (!head) {
+                            head = newNode;
+                        } else {
+                            TextNode* curr = head;
+                            while (curr->next) curr = curr->next;
+                            curr->next = newNode;
+                        }
+        
+                        Action insertAction;
+                        insertAction.type = "insert";
+                        insertAction.position = position++;
+                        insertAction.content = ch;
+                        insertAction.bold = newNode->bold;
+                        insertAction.italic = newNode->italic;
+                        insertAction.underline = newNode->underline;
+                        undoStack.push(insertAction);
+                    }
+        
+                    while (!redoStack.isEmpty()) redoStack.pop();
+        
+                    cout << "Inserted at end: \"" << input << "\"" << endl;
+                    break;
+                }
             
+                    case 2: { // Insert at beginning
+                        int position = 0;
+                        TextNode* newHead = nullptr;
+                        TextNode* newTail = nullptr;
+            
+                        for (char ch : input) {
+                            TextNode* newNode = new TextNode(ch);
+            
+                            if (boldMode) newNode->bold = true;
+                            if (italicMode) newNode->italic = true;
+                            if (underlineMode) newNode->underline = true;
+            
+                            if (!newHead) {
+                                newHead = newNode;
+                                newTail = newNode;
+                            } else {
+                                newTail->next = newNode;
+                                newTail = newNode;
+                            }
+            
+                            Action insertAction;
+                            insertAction.type = "insert";
+                            insertAction.position = position;
+                            insertAction.content = ch;
+                            insertAction.bold = newNode->bold;
+                            insertAction.italic = newNode->italic;
+                            insertAction.underline = newNode->underline;
+                            undoStack.push(insertAction);
+                        }
+    
+                        newTail->next = head;
+                        head = newHead;
+            
+                        while (!redoStack.isEmpty()) redoStack.pop();
+            
+                        cout << "Inserted at beginning: \"" << input << "\"" << endl;
+                        break;
+                    }
+            
+                    case 3: { // Insert at specific position
+                        int pos;
+                        cout << "Enter position to insert at: ";
+                        cin >> pos;
+                        cin.ignore();
+            
+                        int position = 0;
+                        TextNode* curr = head;
+                        TextNode* prev = nullptr;
+            
+                        while (curr && position < pos) {
+                            prev = curr;
+                            curr = curr->next;
+                            position++;
+                        }
+            
+                        if (position != pos) {
+                            cout << "Invalid position!" << endl;
+                            break;
+                        }
+            
+                        for (char ch : input) {
+                            TextNode* newNode = new TextNode(ch);
+            
+                            if (boldMode) newNode->bold = true;
+                            if (italicMode) newNode->italic = true;
+                            if (underlineMode) newNode->underline = true;
+            
+                            if (prev) {
+                                prev->next = newNode;
+                            } else {
+                                head = newNode;
+                            }
+            
+                            newNode->next = curr;
+                            prev = newNode;
+            
+                            Action insertAction;
+                            insertAction.type = "insert";
+                            insertAction.position = position++;
+                            insertAction.content = ch;
+                            insertAction.bold = newNode->bold;
+                            insertAction.italic = newNode->italic;
+                            insertAction.underline = newNode->underline;
+                            undoStack.push(insertAction);
+                        }
+            
+                        while (!redoStack.isEmpty()) redoStack.pop();
+            
+                        cout << "Inserted at position " << pos << ": \"" << input << "\"" << endl;
+                        break;
+                    }
+            
+                    default:
+                        cout << "Invalid insert choice.\n";
+                }
+                break;
+        }
+
 
         case 2: {
             cout << "Delete Choice:\n";
@@ -588,6 +697,5 @@ int main() {
             cout << "Invalid choice.\n";
         }
     }
-
     return 0;
 }
