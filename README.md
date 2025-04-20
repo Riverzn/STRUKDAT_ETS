@@ -1,0 +1,1 @@
+# STRUKDAT_ETS
