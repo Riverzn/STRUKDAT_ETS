@@ -89,19 +89,28 @@ int main() {
     int choice;
 
     while (true) {
-        cout << "\nSimple Text Editor (CLI Version)\n";
-        cout << "1. Insert Text\n";
-        cout << "2. Delete Text\n";
-        cout << "3. Format Text\n";
-        cout << "4. Toggle Formatting Mode\n";
-        cout << "5. Undo\n";
-        cout << "6. Redo\n";
-        cout << "7. Display Text\n";
-        cout << "Choice: ";
-        cin >> choice;
-        cin.ignore();
+    cout << "\n";
+    cout << "╔══════════════════════════════════════╗\n";
+    cout << "║         📝  TEXT EDITOR CLI          ║\n";
+    cout << "╠══════════════════════════════════════╣\n";
+    cout << "║  1️⃣  ✍️  Insert Text                  ║\n";
+    cout << "║  2️⃣  ❌  Delete Text                  ║\n";
+    cout << "║  3️⃣  🎨  Format Specific Text         ║\n";
+    cout << "║  4️⃣  🔀  Toggle Format Mode (B/I/U)   ║\n";
+    cout << "║  5️⃣  ↩️  Undo Last Action             ║\n";
+    cout << "║  6️⃣  ↪️  Redo Last Undone Action      ║\n";
+    cout << "║  7️⃣  📄  Display Current Text         ║\n";
+    cout << "║  0️⃣  🚪  Exit Editor                  ║\n";
+    cout << "╚══════════════════════════════════════╝\n";
+    cout << "👉 Enter your choice: ";
+    cin >> choice;
+    cin.ignore();
 
         switch (choice) {
+            case 0:
+            cout << "\n👋 Exiting the editor. See you again!\n";
+            return 0;
+            
             case 1: {
                 string input, line;
                 cout << "Enter text to insert (type '::end' to finish):" << endl;
