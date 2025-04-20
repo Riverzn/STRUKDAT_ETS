@@ -97,6 +97,7 @@ int main() {
         cout << "5. Undo\n";
         cout << "6. Redo\n";
         cout << "7. Display Text\n";
+        cout << "Choice: ";
         cin >> choice;
         cin.ignore();
 
